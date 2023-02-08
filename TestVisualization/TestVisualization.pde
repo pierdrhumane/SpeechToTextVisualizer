@@ -21,8 +21,8 @@ ParticleSpring[] particles = new ParticleSpring[numParticles];
 PVector attractorPos = new PVector(width/2, height/2);
 
 /* DOTS */
-final static int pixelNumW = 150;
-final static int pixelNumH = 75;
+final static int pixelNumW = 160;
+final static int pixelNumH = 80;
 final static int numPixels = pixelNumW*pixelNumH;
 Dot[] dots = new Dot[numPixels];
 
@@ -95,33 +95,6 @@ void draw() {
   translate(width/2,height/2);
   fft.analyze(spectrum);
 
-  for (int i = 0; i < smoothBands; i++) {
-    // The result of the FFT is normalized
-    // draw the line for frequency band i scaling it up by 5 to get more amplitude.
-    float x = i* (width/(smoothBands));
-
-    //line(x, height/2, x, height/2 - map(spectrum[i],0,0.001,-height/2,height/2) );
-    ellipse(x-width/2, height/2 - map(spectrum[i], 0, 0.05, 0, height/4), 20, 20);
-  }
-
-  
-  //// If there are any points
-  //if (pointsText != null) {
-  //  noFill();
-  //  stroke(0, 225, 224);
-
-  //  //beginShape();
-  //  //for(int i=0; i<points.length; i++){
-  //  //  vertex(width/2+points[i].x, height/2+points[i].y);
-  //  //}
-  //  //endShape();
-
-  //  fill(0, 255, 224, 50);
-  //  stroke(0, 255, 224, 20);
-  //  for (int i=0; i<pointsText.length; i++) {
-  //    ellipse(pointsText[i].x,  pointsText[i].y, 5, 5);
-  //  }
-  //}
   updateTargets();
   updateParticles();
   updateSizeDots();
@@ -141,7 +114,7 @@ void getTextPoints()
   
   // SHAPE
   RG.setPolygonizer(RG.ADAPTATIVE);
-  grp.draw();
+  //grp.draw();
 
   RG.setPolygonizer(RG.UNIFORMLENGTH);
   RG.setPolygonizerLength(6);// map(mouseY, 0, height, 3, 200));
@@ -151,9 +124,9 @@ void updateTargets()
 {
   for (int i=0; i< particles.length; i++)
   {
-
-    var indexSpectrum = floor((particles[i].position.x+width/2)/width ) *(smoothBands);
-
-    particles[i].setTarget(new PVector(particles[i].position.x, height/2 - map(spectrum[indexSpectrum], 0, 0.05, 0, height/2)));
+    int indexSpectrum =    abs((int)map( (particles[i].position.x+width/2)  ,0,width,-smoothBands*2,smoothBands*2) ); //floor((particles[i].position.x+width/2)/width ) *(smoothBands);
+    //println(i,indexSpectrum,(particles[i].position.x+width/2));
+    particles[i].setTarget(new PVector(particles[i].position.x, height*-0.10 - map(spectrum[indexSpectrum], 0, 0.05, 0, height/4)));
   }
+  //noLoop();
 }

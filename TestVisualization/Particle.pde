@@ -69,7 +69,7 @@ class Particle {
   void display() {
     strokeWeight(2);
     stroke(0,225,223, 100);
-    line(pos.x, pos.y, originalPos.x, originalPos.y);
+    //line(pos.x, pos.y, originalPos.x, originalPos.y);
     ellipse(pos.x, pos.y, 5, 5);
   }
 }
