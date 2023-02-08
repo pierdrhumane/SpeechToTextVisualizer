@@ -7,6 +7,9 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		960BF56A299422AE00879118 /* SpeechToTextEngineMac.swift in Sources */ = {isa = PBXBuildFile; fileRef = 960BF569299422AE00879118 /* SpeechToTextEngineMac.swift */; };
+		960BF5722994381700879118 /* SwiftOSC.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 960BF56F2994380000879118 /* SwiftOSC.framework */; };
+		960BF5732994381700879118 /* SwiftOSC.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 960BF56F2994380000879118 /* SwiftOSC.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		96863CFE298C704B00A606C3 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 96863CFD298C704B00A606C3 /* AppDelegate.swift */; };
 		96863D00298C704B00A606C3 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 96863CFF298C704B00A606C3 /* ViewController.swift */; };
 		96863D02298C704C00A606C3 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 96863D01298C704C00A606C3 /* Assets.xcassets */; };
@@ -33,7 +36,24 @@
 		};
 /* End PBXContainerItemProxy section */
 
+/* Begin PBXCopyFilesBuildPhase section */
+		960BF5742994381800879118 /* Embed Frameworks */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 10;
+			files = (
+				960BF5732994381700879118 /* SwiftOSC.framework in Embed Frameworks */,
+			);
+			name = "Embed Frameworks";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXCopyFilesBuildPhase section */
+
 /* Begin PBXFileReference section */
+		960BF569299422AE00879118 /* SpeechToTextEngineMac.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SpeechToTextEngineMac.swift; sourceTree = "<group>"; };
+		960BF56F2994380000879118 /* SwiftOSC.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SwiftOSC.framework; path = "../../../../Library/Developer/Xcode/DerivedData/SwiftOSC-eonfckcyzxtzsydxwdzzjidqssiy/Build/Products/Debug/SwiftOSC.framework"; sourceTree = "<group>"; };
+		960BF5712994380F00879118 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
 		96863CFA298C704B00A606C3 /* Speech2TextEngine.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Speech2TextEngine.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		96863CFD298C704B00A606C3 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		96863CFF298C704B00A606C3 /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
@@ -52,6 +72,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				960BF5722994381700879118 /* SwiftOSC.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -75,6 +96,7 @@
 		96863CF1298C704B00A606C3 = {
 			isa = PBXGroup;
 			children = (
+				960BF56F2994380000879118 /* SwiftOSC.framework */,
 				96863CFC298C704B00A606C3 /* Speech2TextEngine */,
 				96863D0E298C704D00A606C3 /* Speech2TextEngineTests */,
 				96863D18298C704D00A606C3 /* Speech2TextEngineUITests */,
@@ -95,8 +117,10 @@
 		96863CFC298C704B00A606C3 /* Speech2TextEngine */ = {
 			isa = PBXGroup;
 			children = (
+				960BF5712994380F00879118 /* Info.plist */,
 				96863CFD298C704B00A606C3 /* AppDelegate.swift */,
 				96863CFF298C704B00A606C3 /* ViewController.swift */,
+				960BF569299422AE00879118 /* SpeechToTextEngineMac.swift */,
 				96863D01298C704C00A606C3 /* Assets.xcassets */,
 				96863D03298C704D00A606C3 /* Main.storyboard */,
 				96863D06298C704D00A606C3 /* Speech2TextEngine.entitlements */,
@@ -131,6 +155,7 @@
 				96863CF6298C704B00A606C3 /* Sources */,
 				96863CF7298C704B00A606C3 /* Frameworks */,
 				96863CF8298C704B00A606C3 /* Resources */,
+				960BF5742994381800879118 /* Embed Frameworks */,
 			);
 			buildRules = (
 			);
@@ -253,6 +278,7 @@
 			files = (
 				96863D00298C704B00A606C3 /* ViewController.swift in Sources */,
 				96863CFE298C704B00A606C3 /* AppDelegate.swift in Sources */,
+				960BF56A299422AE00879118 /* SpeechToTextEngineMac.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -424,9 +450,15 @@
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = WCR7V4PQBP;
 				ENABLE_HARDENED_RUNTIME = YES;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)",
+				);
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = Speech2TextEngine/Info.plist;
 				INFOPLIST_KEY_NSHumanReadableCopyright = "";
 				INFOPLIST_KEY_NSMainStoryboardFile = Main;
+				INFOPLIST_KEY_NSMicrophoneUsageDescription = "Using microphone for speech recognition";
 				INFOPLIST_KEY_NSPrincipalClass = NSApplication;
 				INFOPLIST_KEY_NSSpeechRecognitionUsageDescription = asdsad;
 				LD_RUNPATH_SEARCH_PATHS = (
@@ -452,9 +484,15 @@
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = WCR7V4PQBP;
 				ENABLE_HARDENED_RUNTIME = YES;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)",
+				);
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = Speech2TextEngine/Info.plist;
 				INFOPLIST_KEY_NSHumanReadableCopyright = "";
 				INFOPLIST_KEY_NSMainStoryboardFile = Main;
+				INFOPLIST_KEY_NSMicrophoneUsageDescription = "Using microphone for speech recognition";
 				INFOPLIST_KEY_NSPrincipalClass = NSApplication;
 				INFOPLIST_KEY_NSSpeechRecognitionUsageDescription = asdsad;
 				LD_RUNPATH_SEARCH_PATHS = (

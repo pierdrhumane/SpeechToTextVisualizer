@@ -37,6 +37,6 @@ void initParticlesSpring()
   float unit = width/particles.length;
   for (int i = 0; i < particles.length; i++) {
     //particles[i] = new ParticleSpring(random(width), random(height), random(1, 3));
-    particles[i] = new ParticleSpring( (unit*i)-width/2 , height/2, 1);
+    particles[i] = new ParticleSpring( (unit*i)-width/2 , height/2, 0.5);
   }
 }

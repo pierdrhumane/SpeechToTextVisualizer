@@ -1,8 +1,13 @@
 import processing.sound.*;
 import geomerative.*;
 import de.looksgood.ani.*;
+import controlP5.*;
 
+/** UI CONTROL **/
+ControlP5 cp5;
+Accordion accordion;
 
+/** FFT,WAVE AND AUDIO IN**/
 FFT fft;
 AudioIn in;
 int bands = 256;
@@ -10,7 +15,8 @@ int smoothBands = 16;
 float[] spectrum = new float[bands];
 String[] words = {"hello", "what's", "up", "how", "are", "you", "set", "a", "timer", "for", "5", "minutes", "play", "some", "music", "what's", "the", "weather", "like", "today", "tell", "me", "a", "joke", "what's", "the", "time", "search", "for", "pizza", "restaurants", "near", "me", "turn", "on", "the", "lights"};
 int wordsIndex = 0;
-
+Waveform waveform;
+int waveFormSamples = 256;
 
 /** PARTICLES **/
 int numParticles = 256;
@@ -93,6 +99,7 @@ void draw() {
   fill(0, 255, 223, 128);
   stroke(0, 255, 223, 128);
   translate(width/2,height/2);
+
   fft.analyze(spectrum);
 
   updateTargets();
@@ -104,7 +111,10 @@ void draw() {
       dots[i].show();
       dots[i].update();
   }
-  
+   for (int i=0; i< particles.length; i++)
+  {
+      particles[i].display();
+  }
 }
 
 void getTextPoints()
@@ -126,7 +136,7 @@ void updateTargets()
   {
     int indexSpectrum =    abs((int)map( (particles[i].position.x+width/2)  ,0,width,-smoothBands*2,smoothBands*2) ); //floor((particles[i].position.x+width/2)/width ) *(smoothBands);
     //println(i,indexSpectrum,(particles[i].position.x+width/2));
-    particles[i].setTarget(new PVector(particles[i].position.x, height*-0.10 - map(spectrum[indexSpectrum], 0, 0.05, 0, height/4)));
+    particles[i].setTarget( new PVector(  particles[i].position.x, height*-0.10 - map(spectrum[indexSpectrum], 0, 0.05, 0, height/4)));
   }
   //noLoop();
 }
