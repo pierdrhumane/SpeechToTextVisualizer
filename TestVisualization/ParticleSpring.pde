@@ -5,6 +5,7 @@ class ParticleSpring {
   float mass;
   float damping;
   PVector target;
+  PVector originalPos;
 
   ParticleSpring(float x, float y, float mass) {
     position = new PVector(x, y);
@@ -13,6 +14,7 @@ class ParticleSpring {
     this.mass = mass;
     damping = 0.85;
     target= new PVector(x,y);
+    originalPos = new PVector(x,y);
   }
 
   void update() {
@@ -32,11 +34,20 @@ class ParticleSpring {
     target = t;
   }
 }
+/***** METHODS ****/
 void initParticlesSpring()
 {
   float unit = width/particles.length;
   for (int i = 0; i < particles.length; i++) {
     //particles[i] = new ParticleSpring(random(width), random(height), random(1, 3));
     particles[i] = new ParticleSpring( (unit*i)-width/2 , height/2, 0.5);
+  }
+}
+
+void updateParticlesSpring() {
+  for (ParticleSpring p : particles) {
+    //p.applyForce(p.attract(attractorPos));
+    p.update();
+    //p.display();
   }
 }

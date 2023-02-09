@@ -115,6 +115,8 @@ class SpeechToTextEngineMac{
             if let foundResult = result {
                 print(foundResult.bestTranscription.formattedString)
                 delegate?.transcriptionUpdated(foundResult.bestTranscription.formattedString);
+                self.previousResult = foundResult;
+                isFinal = foundResult.isFinal;
             }
             
             if error != nil {
@@ -134,6 +136,7 @@ class SpeechToTextEngineMac{
                 self.start()
                 
                 // self.controllerInstance?.comenzarReconocimiento.setNextState()
+               
             }
             
             if isFinal {
@@ -148,11 +151,11 @@ class SpeechToTextEngineMac{
                 self.recognitionTask = nil
                 
                 self.seenSegments = []
-                if(self.started)
-                {
+//                if(self.started)
+//                {
                     print("Re-starting recognition...")
                     self.start()
-                }
+//                }
             }
 
         }

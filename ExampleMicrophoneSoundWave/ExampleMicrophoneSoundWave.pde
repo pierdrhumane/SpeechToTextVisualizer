@@ -49,7 +49,7 @@ public void draw()
   pointsWave = new RPoint[samples+2];
   for (int i = 0; i < samples; i++)
   {
-    pointsWave[i] = new RPoint( map(i, 0, samples, -width/2, width/2), map(waveform.data[i], -1, 1, -height/2, height*0.45));
+    pointsWave[i] = new RPoint( map(i, 0, samples, -width/2, width/2), map(waveform.data[i], -1, 1, -height/2, height*map(mouseY,0,height,0.05,0.65)));
     //vertex(
     //  map(i, 0, samples, 0, width),
     //  map(waveform.data[i], -1, 1, 0, height)
@@ -135,7 +135,31 @@ void getShapeOfText()
 }
 void keyPressed()
 {
-  getShapeOfText();
+  if(key == 'n')
+  {
+    getShapeOfText();
+  }
+  else if(key == 't')
+  {
+    grp = RG.getText("Hello", "humane-bold.ttf", 200, CENTER);
+    RG.setPolygonizer(RG.UNIFORMSTEP);
+    RG.setPolygonizerLength(3);// map(mouseY, 0, height, 3, 200));
+    pointsText = grp.getPoints();
+  }
+  else if(key == 'y')
+  {
+    grp = RG.getText("Hello", "humane-vf.ttf", 200, CENTER);
+    RG.setPolygonizer(RG.UNIFORMSTEP);
+    RG.setPolygonizerLength(3);// map(mouseY, 0, height, 3, 200));
+    pointsText = grp.getPoints();
+  }
+  else if(key == 'r')
+  {
+    grp = RG.getText("Hello", "humane-extralight.ttf", 200, CENTER);
+    RG.setPolygonizer(RG.UNIFORMSTEP);
+    RG.setPolygonizerLength(3);// map(mouseY, 0, height, 3, 200));
+    pointsText = grp.getPoints();
+  }
 }
 void mergeArrays(RPoint[] arr1, RPoint[] arr2, RPoint[] result) {
   System.arraycopy(arr1, 0, result, 0, arr1.length);

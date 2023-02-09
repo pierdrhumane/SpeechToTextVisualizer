@@ -19,13 +19,7 @@ void initParticles()
   //}
 }
 
-void updateParticles() {
-  for (ParticleSpring p : particles) {
-    //p.applyForce(p.attract(attractorPos));
-    p.update();
-    p.display();
-  }
-}
+
 
 void mousePressed() {
   attractorPos = new PVector(mouseX, mouseY);
@@ -37,6 +31,7 @@ class Particle {
   PVector acc;
   PVector originalPos;
   float maxSpeed = 4;
+  PVector target;
 
   Particle(float x, float y) {
     pos = new PVector(x, y);
@@ -55,9 +50,12 @@ class Particle {
   void applyForce(PVector force) {
     acc.add(force);
   }
-
-  PVector attract(PVector target) {
-    PVector force = PVector.sub(target, pos);
+  void setTarget(PVector target_)
+  {
+    this.target = target_;
+  }
+  PVector attract(PVector target_) {
+    PVector force = PVector.sub(target_, pos);
     float d = force.mag();
     d = constrain(d, 5, 100);
     force.normalize();
@@ -69,7 +67,6 @@ class Particle {
   void display() {
     strokeWeight(2);
     stroke(0,225,223, 100);
-    //line(pos.x, pos.y, originalPos.x, originalPos.y);
     ellipse(pos.x, pos.y, 5, 5);
   }
 }

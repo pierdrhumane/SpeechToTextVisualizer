@@ -17,6 +17,11 @@ String[] words = {"hello", "what's", "up", "how", "are", "you", "set", "a", "tim
 int wordsIndex = 0;
 Waveform waveform;
 int waveFormSamples = 256;
+Amplitude amp;
+
+/* STRING TO DISPLAY */
+String newWord = null;
+String wordToDisplay = "";
 
 /** PARTICLES **/
 int numParticles = 256;
@@ -32,42 +37,42 @@ final static int pixelNumH = 80;
 final static int numPixels = pixelNumW*pixelNumH;
 Dot[] dots = new Dot[numPixels];
 
+/** RIPPLE **/
+float valuesRipple[] = new float[pixelNumW];
+
+
 /** ANIMATION **/
 float b = 0.0;
 Ani bAni;
 
 /** GEOMETRATIVE **/
-
-// Declare the objects we are going to use, so that they are accesible from setup() and from draw()
 RFont f;
 RShape grp;
 RPoint[] pointsText = new RPoint[0];
+
+
 
 void setup() {
   size(800, 400);
   background(255);
 
-  // Create an Input stream which is routed into the Amplitude analyzer
-  fft = new FFT(this, bands);
-  in = new AudioIn(this, 0);
-
   // start the Audio Input
+  in = new AudioIn(this, 0);
   in.start();
 
-  // patch the AudioIn
-  fft.input(in);
 
   //Start particles
   initParticlesSpring();
-
-
+  changeCurve();
+  /** UI **/
+  initGUI(this);
 
   /** GEOMETRATIVE **/
   // VERY IMPORTANT: Allways initialize the library in the setup
   RG.init(this);
-//  Load the font file we want to use (the file must be in the data folder in the sketch floder), with the size 60 and the alignment CENTER
+  //  Load the font file we want to use (the file must be in the data folder in the sketch floder), with the size 60 and the alignment CENTER
   grp = RG.getText("Hello", "humane-vf.ttf", 200, CENTER);
-  
+
 
   // Enable smoothing
   smooth();
@@ -76,12 +81,12 @@ void setup() {
   int index = 0;
   float unitY = (height/pixelNumH);
   float unitX = (width/pixelNumW);
-  
+
   for (int y=0; y<height; y+=unitY)
   {
     for (int x=0; x<width; x+=unitX)
     {
-     
+
       if (index<numPixels)
       {
         dots[index] = new Dot(x+unitX/2-width/2, y+unitY/2-height/2);
@@ -90,53 +95,94 @@ void setup() {
     }
   }
   println(dots.length);
-  
+
   Ani.init(this);
+
+  initOSC();
 }
 
 void draw() {
   background(0);
   fill(0, 255, 223, 128);
   stroke(0, 255, 223, 128);
-  translate(width/2,height/2);
+  pushMatrix();
+  translate(width/2, height/2);
 
-  fft.analyze(spectrum);
-
+  updateWaveForm();
   updateTargets();
-  updateParticles();
+  updateParticlesSpring();
   updateSizeDots();
-  
+  updateWord();
+
   for (int i=0; i < numPixels-1; i++)
-  {  
-      dots[i].show();
-      dots[i].update();
-  }
-   for (int i=0; i< particles.length; i++)
   {
-      particles[i].display();
+    dots[i].show();
+    dots[i].update();
   }
+
+  popMatrix();
 }
 
-void getTextPoints()
-{
-  //GET NEW TEXT
-  grp = RG.getText(words[wordsIndex], "humane-vf.ttf", 200, CENTER);
-  
-  // SHAPE
-  RG.setPolygonizer(RG.ADAPTATIVE);
-  //grp.draw();
 
-  RG.setPolygonizer(RG.UNIFORMLENGTH);
-  RG.setPolygonizerLength(6);// map(mouseY, 0, height, 3, 200));
-  pointsText = grp.getPoints();
-}
+
 void updateTargets()
 {
   for (int i=0; i< particles.length; i++)
   {
-    int indexSpectrum =    abs((int)map( (particles[i].position.x+width/2)  ,0,width,-smoothBands*2,smoothBands*2) ); //floor((particles[i].position.x+width/2)/width ) *(smoothBands);
-    //println(i,indexSpectrum,(particles[i].position.x+width/2));
-    particles[i].setTarget( new PVector(  particles[i].position.x, height*-0.10 - map(spectrum[indexSpectrum], 0, 0.05, 0, height/4)));
+    switch (waveFormState) {
+    case FFT:
+      {
+        int indexSpectrum = constrain(abs((int)map((particles[i].position.x + width/2), 0, width, -smoothBands*2, smoothBands*2)), 0, particles.length);
+        particles[i].setTarget(new PVector(particles[i].position.x, height * -0.10 - map(spectrum[indexSpectrum], 0, 0.05, 0, height/4)));
+        break;
+      }
+    case WAVE:
+      {
+        int indexSpectrum = constrain((int)map((particles[i].position.x + width/2), 0, width, 0, bands/2), 0, bands/2);
+        particles[i].setTarget(new PVector(particles[i].position.x, height * -0.10 - map(spectrum[indexSpectrum], 0, 0.05, 0, height/4)));
+        break;
+      }
+    case RIPPLE:
+       {
+        
+        PVector center = new PVector(0, 0);
+        PVector direction = PVector.sub(particles[i].position, center);
+        direction.normalize();
+        direction.mult(map(valuesRipple[0],0.0,0.25,1,100));
+        PVector targetVector =  PVector.add(particles[i].originalPos,direction);
+        if(PVector.dist(center,targetVector)>width)
+        {
+          targetVector = new PVector(0,0);
+        }
+        particles[i].setTarget(targetVector);
+         
+        //int indexSpectrum = constrain((int)map((particles[i].position.x + width/2), 0, width, 0, bands/2), 0, bands/2);
+        //particles[i].setTarget(new PVector(particles[i].position.x, height * -0.10 - map(spectrum[indexSpectrum], 0, 0.05, 0, height/4)));
+        break;
+      }
+    case TYPOGRAPHY:
+      break;
+    case WAVE_SHAPE:
+    {
+      
+      break;
+    }
   }
-  //noLoop();
+    
+    //if(waveFormState == FFT)
+    //{
+    //  int indexSpectrum =   constrain( abs((int)map( (particles[i].position.x+width/2)  ,0,width,-smoothBands*2,smoothBands*2) ),0,particles.length ); //floor((particles[i].position.x+width/2)/width ) *(smoothBands);
+    //  particles[i].setTarget( new PVector(  particles[i].position.x, height*-0.10 - map(spectrum[indexSpectrum], 0, 0.05, 0, height/4)));
+    //}
+    //else if(waveFormState == WAVE)
+    //{
+    //  int indexSpectrum =   constrain((int)map( (particles[i].position.x + width/2)  ,0 , width ,0,bands/2),0,bands/2); //floor((particles[i].position.x+width/2)/width ) *(smoothBands);
+    //  particles[i].setTarget( new PVector(  particles[i].position.x, height*-0.10 - map(spectrum[indexSpectrum], 0, 0.05, 0, height/4)));
+    //}
+    //else if(waveFormState == RIPPLE)
+    //{
+    //  //println("updatingPartiles");
+    //}
+    //else if(waveForm)
+  }
 }

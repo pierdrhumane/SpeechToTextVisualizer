@@ -84,15 +84,21 @@ extension ViewController:SpeechToTextDelegate{
                 difference += "\(word) "
               }
             }
-//            previousSentence = newSentence
+
         _sentenceLabel!.stringValue = newSentence
             print("The difference between the previous sentence and the new sentence is: \(difference)")
-        _singleWordLabel?.stringValue = difference;
-        var message = OSCMessage(
-            OSCAddressPattern("/"),
-            difference
-        )
-        oscClient!.send(message)
+        
+        if(difference != "")
+        {
+            var message = OSCMessage(
+                OSCAddressPattern("/"),
+                difference
+            )
+            oscClient!.send(message)
+            _singleWordLabel?.stringValue = difference;
+            
+        }
+       
     }
     
     func permissionUpdated(_ permissionState: SFSpeechRecognizerAuthorizationStatus) {
