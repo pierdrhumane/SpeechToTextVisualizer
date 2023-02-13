@@ -3,7 +3,7 @@ void keyPressed()
   switch(key)
   {
   case 'a':
-    bAni = Ani.to(this, 0.3, "b", 0.0, Ani.LINEAR, "onEnd:wait3");
+    bAni = Ani.to(this, 0.3, "animationValue", 0.0, Ani.LINEAR, "onEnd:wait3");
     bAni.start();
     break;
   case 'n':
@@ -18,13 +18,13 @@ void keyPressed()
 }
 
 void phaseOut() {
-  bAni = Ani.to(this, 0.2, "b", 1.0, Ani.LINEAR, "onEnd:phaseIn");
+  bAni = Ani.to(this, 0.5, "animationValue", 1.0, Ani.QUART_IN_OUT, "onEnd:phaseIn");
   bAni.start();
 }
 
 void wait3()
 {
-  bAni = Ani.to(this, 2.0, "b", 0.0, Ani.LINEAR, "onEnd:phaseOut");
+  bAni = Ani.to(this, 2.0, "animationValue", 0.0, Ani.LINEAR, "onEnd:phaseOut");
   bAni.start();
 }
 void phaseIn()
@@ -34,11 +34,13 @@ void updateWord()
 {
   if(newWord != null)
   {
+    
     wordToDisplay = newWord;
-     getTextPoints();
+    getTextPoints();
     println("add new word to display",wordToDisplay);
     newWord = null;
     displayWord();
+
   }
 }
 void displayWord()
@@ -48,6 +50,6 @@ void displayWord()
       bAni.end();
       Ani.killAll();
     }
-    bAni =  Ani.to(this, 0.3, "b", 0.0, Ani.LINEAR, "onEnd:wait3");
+    bAni =  Ani.to(this, 0.5, "animationValue", 0.0, Ani.EXPO_IN_OUT, "onEnd:wait3");
     bAni.start();
 }

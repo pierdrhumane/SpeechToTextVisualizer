@@ -54,6 +54,7 @@ void changeCurve()
     }
     case TYPOGRAPHY:
     {
+      
       break;
     }
   case WAVE_SHAPE:
@@ -69,15 +70,33 @@ void changeCurve()
 }
 void updateWaveForm()
 {
-  if (waveFormState == FFT)
+  switch(waveFormState)
   {
-    fft.analyze(spectrum);
-  } else if (waveFormState == WAVE)
-  {
-    waveform.analyze(spectrum);
-  } else if (waveFormState == RIPPLE)
-  {
-    addToArray(amp.analyze());
+     case FFT:
+    {
+      fft.analyze(spectrum);
+      break;
+    }
+     case WAVE:
+    {
+      waveform.analyze(spectrum);
+      break;
+    }
+     case RIPPLE:
+    {
+      addToArray(amp.analyze());
+      break;
+    }
+    case TYPOGRAPHY:
+    {
+      //addToArray(amp.analyze());
+      break;
+    }
+     case WAVE_SHAPE:
+    {
+      waveform.analyze(spectrum);
+      break;
+    }
   }
 }
 //void addToArray(float value) {

@@ -9,9 +9,13 @@ final static int FFT = 1;
 final static int RIPPLE = 2;
 final static int TYPOGRAPHY = 3;
 final static int WAVE_SHAPE = 4;
+
 final static int numOfStates = 5;
+final static String[] stateNames= {"Wave","Fft","Ripple","Typography","Wave_Shape"};
 
 int waveFormState = FFT;
+controlP5.Controller<Textlabel> label;
+float offsetY = 0.05;
 
 void initGUI(PApplet p)
 {
@@ -28,11 +32,11 @@ void initGUI(PApplet p)
      .moveTo(g3)
      ;
      
-  cp5.addSlider("max_size")
+  cp5.addSlider("offsetY")
      .setPosition(60,20)
      .setSize(100,20)
-     .setRange(100,500)
-     .setValue(100)
+     .setRange(-0.5,0.5)
+     .setValue(0.05)
      .moveTo(g3)
      ;
      
@@ -43,7 +47,11 @@ void initGUI(PApplet p)
      .setValue(200)
      .moveTo(g3)
      ;
-
+   label = cp5.addLabel("FFT").setPosition(60,90)
+     .setSize(100,20)
+     .setValue("FFT")
+     .moveTo(g3)
+     ;
   accordion = cp5.addAccordion("acc")
     .setPosition(width-200, 0)
     .setWidth(200)
@@ -59,6 +67,7 @@ void swap_crv() {
   
   waveFormState = (waveFormState+1)%numOfStates;
   changeCurve();
-  println("change curve:"+waveFormState);
+  label.setValueLabel(stateNames[waveFormState]);
+  //println("change curve:"+waveFormState);/
   //c = color(random(255),random(255),random(255),random(128,255));
 }

@@ -1,4 +1,4 @@
-import processing.sound.*;
+import processing.sound.*; //<>//
 import geomerative.*;
 import de.looksgood.ani.*;
 import controlP5.*;
@@ -40,9 +40,13 @@ Dot[] dots = new Dot[numPixels];
 /** RIPPLE **/
 float valuesRipple[] = new float[pixelNumW];
 
+/** WAVE_SHAPE **/
+RShape workingShape = new RShape();
+RPoint[] workingPointArray = new RPoint[numParticles];
+
 
 /** ANIMATION **/
-float b = 0.0;
+float animationValue= 0.0;
 Ani bAni;
 
 /** GEOMETRATIVE **/
@@ -127,8 +131,17 @@ void draw() {
 
 void updateTargets()
 {
+  //switch(waveFormState)
+  //{
+  //  case WAVE_SHAPE:
+  //  {
+  //    break;
+  //  }
+  //}
+
   for (int i=0; i< particles.length; i++)
   {
+    
     switch (waveFormState) {
     case FFT:
       {
@@ -143,19 +156,19 @@ void updateTargets()
         break;
       }
     case RIPPLE:
-       {
-        
+      {
+
         PVector center = new PVector(0, 0);
         PVector direction = PVector.sub(particles[i].position, center);
         direction.normalize();
-        direction.mult(map(valuesRipple[0],0.0,0.25,1,100));
-        PVector targetVector =  PVector.add(particles[i].originalPos,direction);
-        if(PVector.dist(center,targetVector)>width)
+        direction.mult(map(valuesRipple[0], 0.0, 0.25, 1, 100));
+        PVector targetVector =  PVector.add(particles[i].originalPos, direction);
+        if (PVector.dist(center, targetVector)>width)
         {
-          targetVector = new PVector(0,0);
+          targetVector = new PVector(0, 0);
         }
         particles[i].setTarget(targetVector);
-         
+
         //int indexSpectrum = constrain((int)map((particles[i].position.x + width/2), 0, width, 0, bands/2), 0, bands/2);
         //particles[i].setTarget(new PVector(particles[i].position.x, height * -0.10 - map(spectrum[indexSpectrum], 0, 0.05, 0, height/4)));
         break;
@@ -163,12 +176,38 @@ void updateTargets()
     case TYPOGRAPHY:
       break;
     case WAVE_SHAPE:
-    {
-      
-      break;
+      {
+
+        int indexSpectrum = constrain((int)map((particles[i].position.x + width/2), 0, width, 0, bands/2), 0, bands/2);
+        particles[i].setTarget(new PVector(particles[i].position.x, height * -0.05 - map(spectrum[indexSpectrum], 0, 0.05, 0, height/4)));
+        workingPointArray[i] = new RPoint(particles[i].position.x, particles[i].position.y);
+       
+
+        break;
+      }
     }
   }
-    
+  switch(waveFormState)
+  {
+  case WAVE_SHAPE:
+    {
+      //workingShape = workingShape.union(grp);
+      workingPointArray[0] = new RPoint(-width/2-20, 0);
+      workingPointArray[numParticles-3] = new RPoint(width/2+20, 0);
+      workingPointArray[numParticles-2] = new RPoint(width/2+20, height);
+      workingPointArray[numParticles-1] = new RPoint(-width/2-20, height);
+      workingShape = new RShape(new RPath(workingPointArray));
+      workingShape.draw();
+      if(grp!=null)
+      {
+        RShape txt = new RShape(grp);
+
+        txt.translate(0,map(animationValue,1,0,height/2,-height*offsetY));
+        workingShape = workingShape.union(txt);
+        
+      }
+      break;
+    }
     //if(waveFormState == FFT)
     //{
     //  int indexSpectrum =   constrain( abs((int)map( (particles[i].position.x+width/2)  ,0,width,-smoothBands*2,smoothBands*2) ),0,particles.length ); //floor((particles[i].position.x+width/2)/width ) *(smoothBands);
