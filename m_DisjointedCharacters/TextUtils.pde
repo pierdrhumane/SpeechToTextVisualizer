@@ -37,12 +37,12 @@ void getTextPoints()
   RG.setPolygonizer(RG.UNIFORMLENGTH);
   RG.setPolygonizerLength(6);// map(mouseY, 0, height, 3, 200));
   pointsText = grp.getPoints();
-  for(WordContainer w : wordsContainer)
+  for(CharContainer w : wordsContainer)
   {
     w.outro();
   }
   
-  WordContainer wc = new WordContainer();
+  CharContainer wc = new CharContainer();
   wordsContainer.add(wc);
   
   //ADDING A SHAPE FOR EVERY CHARACTER:
@@ -52,10 +52,10 @@ void getTextPoints()
   wc.internalWord = wordToDisplay;
   
   for (int i = 0; i < cTmp.length; i++) {
-    wc.charShapes[i] = RG.getText(cTmp[i]+"", "humane-vf.ttf", 150, CENTER);
-    float x = map(i,0,cTmp.length,-cTmp.length/2 * offsetX*100,cTmp.length/2 * offsetX*100);
-    float y = 0;
-    wc.particles[i] = new ParticleCharacter(cTmp[i]+"",x,y,wc.charShapes[i]);
+    wc.charShapes[i] = RG.getText(cTmp[i]+"", "humane-vf.ttf", 150, LEFT);
+    float x = map(i,0,cTmp.length, - (cTmp.length) / 2 * offsetX*100 ,(cTmp.length)/2 * offsetX*100);
+    float y = 0; 
+    wc.particles[i] = new ParticleCharacter(cTmp[i]+"",x+50,y,wc.charShapes[i]);
    
   }
    wc.play();

@@ -19,7 +19,8 @@ void updateWaveForm()
   {
     case TYPOGRAPHY:
     {
-       
+      depthBg = amp.analyze()*5.5; 
+      
       break;
     }
   }

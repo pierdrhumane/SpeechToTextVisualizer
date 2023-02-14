@@ -44,7 +44,7 @@ void initGUI(PApplet p)
   cp5.addSlider("offsetX")
      .setPosition(60,50)
      .setSize(100,20)
-     .setRange(-1.0,1.0)
+     .setRange(-1.0,3.0)
      .setValue(1.0)
      .moveTo(g3)
      ;

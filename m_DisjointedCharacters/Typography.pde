@@ -27,10 +27,10 @@ class ParticleCharacter {
   }
 
   void initPath() {
-    startPoint  = new PVector(random(-width/2, width/2), random(-height/2, height/2));
-    endPoint    = new PVector(random(-width/2, width/2), random(-height/2, height/2));
-    startRotation = random(360);
-    endRotation = random(360);
+    startPoint  = new PVector(random(-width/2, width/2), random(height/4, height/2));
+    endPoint    = new PVector(random(-width/4, width/4), random(-height/2,-height/4));
+    startRotation = random(90);
+    endRotation = random(90);
   }
 
 
@@ -46,12 +46,17 @@ class ParticleCharacter {
       currentPos = PVector.lerp(middlePoint, endPoint, lerpValue );
       currentRotation = lerp(middleRotation, endRotation, lerpValue);
     }
-    PVector translator = new PVector(prevPos.x-currentPos.x, prevPos.y-currentPos.y);
-    float diffRotation = currentRotation - prevRotation;
+    //PVector translator = new PVector(prevPos.x-currentPos.x, prevPos.y-currentPos.y);
+    //float diffRotation = currentRotation - prevRotation;
 
     fill(red(c), green(c), blue(c), map(animationValue, 0.75, 1, 255, 0));
    
     RPoint[] transformedPoints = shape.getPoints();
+    
+    if(transformedPoints == null)
+   {
+     return;
+   }
     for (int i = 0; i < transformedPoints.length; i++) {
       RPoint point = transformedPoints[i];
       float x = point.x;
@@ -63,7 +68,7 @@ class ParticleCharacter {
       transformedPoints[i] = new RPoint(x, y);
     }
     drawableShape = new RShape(new RPath(transformedPoints));
-    drawableShape.draw();
+    //drawableShape.draw();
     //pushMatrix();
     //translate(currentPos.x, currentPos.y);
     //rotate(radians(currentRotation));
@@ -86,7 +91,7 @@ class ParticleCharacter {
 void drawCharacters()
 {
 
-  for (WordContainer w : wordsContainer)
+  for (CharContainer w : wordsContainer)
   {
     if (w.didEnd)
     {

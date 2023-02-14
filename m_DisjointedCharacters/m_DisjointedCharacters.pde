@@ -2,6 +2,7 @@ import processing.sound.*;
 import geomerative.*;
 import de.looksgood.ani.*;
 import controlP5.*;
+import java.util.Iterator;
 
 /** UI CONTROL **/
 ControlP5 cp5;
@@ -54,9 +55,12 @@ RShape grp;
 RPoint[] pointsText = new RPoint[0];
 
 /** TYPOGRAPHY **/
-ArrayList<WordContainer> wordsContainer = new ArrayList<WordContainer>();
+ArrayList<CharContainer> wordsContainer = new ArrayList<CharContainer>();
 
 float lerpValue = 0;
+
+/* BACKGROUND */
+float depthBg, progressNoiseField;
 
 void setup() {
   size(800, 400);

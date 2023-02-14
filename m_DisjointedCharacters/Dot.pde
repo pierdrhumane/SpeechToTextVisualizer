@@ -1,8 +1,8 @@
 class Dot {
   PVector pos;
   float size = 3;
-  float minSize = 0;
-  float maxSize = 10;
+  float minSize = 1;
+  float maxSize = 8;
   float targetSize = size;
 
   public Dot(float x_, float y_)
@@ -23,13 +23,18 @@ class Dot {
   }
   public void changeSize(float newSize)
   {
-    targetSize = newSize; //update the target size
+
+    targetSize = max( targetSize, newSize); //update the target size
+  }
+  public void clearSize()
+  {
+    targetSize = minSize;
   }
 }
 
 void initDots()
 {
-  //-------------------------------------- d
+  //--------------------------------------
   int index = 0;
   float unitY = (height/pixelNumH);
   float unitX = (width/pixelNumW);
@@ -41,7 +46,8 @@ void initDots()
 
       if (index<numPixels)
       {
-        dots[index] = new Dot(x+unitX/2-width/2 + (random(unitX)-unitX/2), y+unitY/2-height/2 + (random(unitY)-unitY/2));
+        dots[index] = new Dot(x+unitX/2-width/2, y+unitY/2-height/2 );
+        //dots[index] = new Dot(x+unitX/2-width/2 + (random(unitX)-unitX/2), y+unitY/2-height/2 );//+ (random(unitY)-unitY/2));
       }
       index ++;
     }
@@ -53,29 +59,55 @@ void updateSizeDots()
   switch(waveFormState)
   {
   case TYPOGRAPHY:
-   
-    RShape masterShape = new RShape();
 
-    for (WordContainer w : wordsContainer)
+    //RShape masterShape = new RShape();
+    for (int j=0; j < numPixels-1; j++)
+    {
+      dots[j].clearSize();
+    }
+
+    for (CharContainer w : wordsContainer)
     {
       for (int i = 0; i < w.particles.length; i++) {
+
         if (w.particles[i]!=null)
         {
-          if(w.particles[i].drawableShape != null)
+          if (w.particles[i].drawableShape != null)
           {
-            masterShape= masterShape.union(w.particles[i].drawableShape);
+            RPoint[] pointsTmp = w.particles[i].drawableShape.getPoints();
+            for (int j=0; j < numPixels-1; j++)
+            {
+              //masterShape= masterShape.union(w.particles[i].drawableShape);
+
+              //println(i, pointsTmp.length, dots[j].pos, w.animVal);
+              float closestParticle= findClosestFast(pointsTmp, dots[j].pos);//PVector.dist(new PVector(mouseX-width/2, mouseY-height/2), dots[i].pos);
+              dots[j].changeSize( constrain( map(closestParticle, 0, 30, 5 * map(abs(w.animVal-0.5), 0, 0.5, 1.0, 0.0), 0 ), 1, 15) );
+            }
           }
         }
       }
     }
+    progressNoiseField +=0.01;
     
-    RPoint[] pointsTmp = masterShape.getPoints();
-    for (int i=0; i < numPixels-1; i++)
+    for (int j=0; j < numPixels-1; j++)
     {
-
-      float closestParticle= findClosestFast(pointsTmp,dots[i].pos);//PVector.dist(new PVector(mouseX-width/2, mouseY-height/2), dots[i].pos);
-      dots[i].changeSize( constrain( map(closestParticle, 0, 30, 5, 0 ), 1, 15) );
+      if(dots[j].targetSize == dots[j].minSize)
+      {
+        //check perlin noise
+        float noiseValue = noise(dots[j].pos.x / pixelNumW * 1.0 , dots[j].pos.y / pixelNumH * 1.0 + progressNoiseField);
+         float adjustedValue = noiseValue*(depthBg*3.0+(abs(noise(progressNoiseField*5.0)*3.0)));// map(noiseValue, 0, 1, 0.5 - depthBg / 2, 0.5 + depthBg / 2);
+         dots[j].changeSize(adjustedValue);
+      }
     }
+
+    //RPoint[] pointsTmp = masterShape.getPoints();
+    //for (int i=0; i < numPixels-1; i++)
+    //{
+
+    //  float closestParticle= findClosestFast(pointsTmp,dots[i].pos);//PVector.dist(new PVector(mouseX-width/2, mouseY-height/2), dots[i].pos);
+
+    //  dots[i].changeSize( constrain( map(closestParticle, 0, 30, 5 * map(abs(stateOfAnimation-0.5),0,0.5,1.0,0.0) , 0 ), 1, 15) );
+    //}
     break;
   }
 }
@@ -95,7 +127,7 @@ float findClosest(RPoint[] points, PVector reference) {
   return closestDistance;
 }
 float findClosestFast(RPoint[] points, PVector reference) {
-  if(points == null)
+  if (points == null)
   {
     return 160000;
   }
