@@ -131,11 +131,14 @@ class SpeechToTextEngineMac{
                 self.recognitionTask = nil
                 
                 self.seenSegments = []
-                
-                print("Re-starting recognition...")
-                self.start()
-                
-                // self.controllerInstance?.comenzarReconocimiento.setNextState()
+                delegate?.stoppedRecording();
+               
+                if(self.started)
+                {
+                    print("Re-starting recognition...")
+                    self.start()
+                }
+              
                
             }
             
@@ -151,24 +154,23 @@ class SpeechToTextEngineMac{
                 self.recognitionTask = nil
                 
                 self.seenSegments = []
-//                if(self.started)
-//                {
+                delegate?.stoppedRecording();
+                if(self.started)
+                {
                     print("Re-starting recognition...")
                     self.start()
-//                }
+                }
             }
 
         }
     }
     public func stop()
     {
-        self.audioEngine.stop()
-        self.recognitionRequest.endAudio()
-//        self.recognitionRequest = nil
-        self.recognitionTask.cancel()
-//        self.recognitionTask = nil
-        myInputNode!.removeTap(onBus: 0)
-        myInputNode!.reset()
+        if self.audioEngine.isRunning {
+            self.audioEngine.stop()
+            self.recognitionRequest.endAudio()
+            self.recognitionTask.cancel()
+        }
         
         self.started = false;
         

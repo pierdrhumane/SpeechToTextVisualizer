@@ -13,6 +13,12 @@ Icon
 
 # Thumbnails
 ._*
+*/**/*.tif
+*/*/*.tif
+*/*/*.mp4
+*/**/*.mp4
+*.mp4
+*.tif
 
 # Files that might appear in the root of a volume
 .DocumentRevisions-V100

@@ -13,7 +13,8 @@ import SwiftOSC
 class ViewController: NSViewController {
     var stt:SpeechToTextEngineMac! = nil;
     
-    
+    let words = ["hello", "what's", "up", "how", "are", "you", "set", "a", "timer", "for", "5", "minutes", "play", "some", "music", "what's", "the", "weather", "like", "today", "tell", "me", "a", "joke", "what's", "the", "time", "search", "for", "pizza", "restaurants", "near", "me", "turn", "on", "the", "lights"];
+    var wordsIndex = 0;
     
     @IBOutlet var _labelAuth:NSTextField?;
     @IBOutlet var _semaphoreAuth:NSView?;
@@ -57,6 +58,15 @@ class ViewController: NSViewController {
             stt.stop();
             sender.title = "Start Transcription";
         }
+    }
+    @IBAction func sendRandomWord(_ sender:NSButton){
+        var message = OSCMessage(
+            OSCAddressPattern("/"),
+            words[wordsIndex]
+        )
+        _singleWordLabel?.stringValue = words[wordsIndex];
+        oscClient!.send(message)
+        wordsIndex = (wordsIndex + 1) % words.count;
     }
     
     

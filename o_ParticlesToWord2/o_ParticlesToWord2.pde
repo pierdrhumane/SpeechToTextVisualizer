@@ -101,11 +101,12 @@ void updateWord(String newWord_)
    RPoint[] points = getPoints(newWord_);
     for(int i = 0;i<p.length;i++)
     { 
-      int pointIndex = i;
-      while (pointIndex > points.length-1) {
-        pointIndex = pointIndex - points.length;
-      }
-      RPoint tmp = points[pointIndex];
+      //int pointIndex = i;
+      //while (pointIndex > points.length-1) {
+      //  pointIndex = pointIndex - points.length;
+      //}
+      //RPoint tmp = points[pointIndex];
+      RPoint tmp = points[(int)map(i,0,p.length,0,points.length-1)];
       p[i].setTarget(new PVector(tmp.x,tmp.y));
       p[i].setNoiseAmount(2);
     }
